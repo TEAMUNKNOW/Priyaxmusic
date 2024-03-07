@@ -14,8 +14,8 @@ from DAXXMUSIC.mongo.couples_db import _get_image, get_couple
 POLICE = [
     [
         InlineKeyboardButton(
-            text="𓊈𒆜彡[𝐃𝚊𝚡𝚡 𝐂𝙲 𝐂𝙻𝚄𝙱 ]彡𒆜𓊉",
-            url=f"https://t.me/ALLTYPECC",
+            text="ᴄʜᴀɴɴᴇʟ",
+            url=f"https://t.me/its_cute_babu",
         ),
     ],
 ]
@@ -124,7 +124,7 @@ async def ctest(_, message):
     
          
       # elif is_selected:
-      #   msg = await message.reply_text("𝐆ᴇᴛᴛɪɴɢ 𝐓ᴏᴅᴀʏs 𝐂ᴏᴜᴘʟᴇs 𝐈ᴍᴀɢᴇ...")
+      #   msg = await message.reply_text("ɢᴇᴛᴛɪɴɢ ᴛᴏᴅᴀʏs ᴄᴏᴜᴘʟᴇs ɪᴍᴀɢᴇ...")
       #   b = await _get_image(cid)
        #  c1_id = int(is_selected["c1_id"])
        #  c2_id = int(is_selected["c2_id"])
@@ -132,11 +132,11 @@ async def ctest(_, message):
         # c2_name = (await app.get_users(c2_id)).first_name
          
       #   TXT = f"""
-#**𝐓ᴏᴅᴀʏ's 𝐒ᴇʟᴇᴄᴛᴇᴅ 𝐂ᴏᴜᴘʟᴇs 🎉 :
+#**ᴛᴏᴅᴀʏ's sᴇʟᴇᴄᴛᴇᴅ ᴄᴏᴜᴘʟᴇs 🎉 :
 #➖➖➖➖➖➖➖➖➖➖➖➖
 #[{c1_name}](tg://openmessage?user_id={c1_id}) + [{c2_name}](tg://openmessage?user_id={c2_id}) = ❣️
 #➖➖➖➖➖➖➖➖➖➖➖➖
-#𝐍ᴇxᴛ 𝐂ᴏᴜᴘʟᴇs 𝐖ɪʟʟ 𝐁ᴇ 𝐒ᴇʟᴇᴄᴛᴇᴅ 𝐎ɴ {tomorrow} !!**
+#ɴᴇxᴛ ᴄᴏᴜᴘʟᴇs ᴡɪʟʟ ʙᴇ sᴇʟᴇᴄᴛᴇᴅ ᴏɴ {tomorrow} !!**
 #"""
  #        await message.reply_photo(b, caption=TXT)
         # await msg.delete()

@@ -15,7 +15,7 @@ async def chat_gpt(bot, message):
 
         if len(message.command) < 2:
             await message.reply_text(
-                "Example:\n\n/chatgpt Where is TajMahal?"
+                "ᴇxᴀᴍᴘʟᴇ:\n\n/chatgpt Where is TajMahal?"
             )
         else:
             a = message.text.split(' ', 1)[1]
@@ -28,7 +28,7 @@ async def chat_gpt(bot, message):
                     end_time = time.time()
                     telegram_ping = str(round((end_time - start_time) * 1000, 3)) + " ms"
                     await message.reply_text(
-                        f" {x}      ᴀɴsᴡᴇʀɪɴɢ ʙʏ ➛  @NexikoBot",
+                        f" {x}      ᴀɴsᴡᴇʀɪɴɢ ʙʏ ➛  @ll_anime_dp_ll",
                         parse_mode=ParseMode.MARKDOWN
                     )
                 else:

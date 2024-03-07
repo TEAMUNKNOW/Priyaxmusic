@@ -37,7 +37,7 @@ async def send_calendar(_, message):
             await message.reply("Invalid year format. Please use /calendar <year>")
             return
     else:
-        await message.reply("Please provide a valid year after /calendar command.")
+        await message.reply("ᴘʟᴇᴀsᴇ ᴘʀᴏᴠɪᴅᴇ ᴀ ᴠᴀʟɪᴅ ʏᴇᴀʀ ᴀғᴛᴇʀ /calendar ᴄᴏᴍᴍᴀɴᴅ.")
         return
 
     # Generate the calendar for the specified year
@@ -48,4 +48,4 @@ async def send_calendar(_, message):
     carbon_image = await make_carbon(full_year_calendar)
 
     # Send the image as a reply to the user
-    await app.send_photo(message.chat.id, carbon_image, caption=f"Calendar for the year {year}")
+    await app.send_photo(message.chat.id, carbon_image, caption=f"ᴄᴀʟᴇɴᴅᴀʀ ғᴏʀ ᴛʜᴇ ʏᴇᴀʀ {year}")

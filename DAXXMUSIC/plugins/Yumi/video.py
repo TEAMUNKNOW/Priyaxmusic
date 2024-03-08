@@ -55,7 +55,7 @@ async def song_commad_private(client, message: Message, _):
     if url:
         if not await YouTube.exists(url):
             return await message.reply_text(_["song_5"])
-        mystic = await message.reply_sticker(_["play_1"])
+        mystic = await message.reply_sticker(_["song_12"])
         (
             title,
             duration_min,

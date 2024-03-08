@@ -81,7 +81,7 @@ async def song_commad_private(client, message: Message, _):
     else:
         if len(message.command) < 2:
             return await message.reply_text(_["song_2"])
-    mystic = await message.reply_sticker(_["play_1"])
+    mystic = await message.reply_sticker(_["song_12"])
     query = message.text.split(None, 1)[1]
     try:
         (

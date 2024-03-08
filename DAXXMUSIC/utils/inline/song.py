@@ -1,16 +1,15 @@
-
 from pyrogram.types import InlineKeyboardButton
-
+import config
 
 def song_markup(_, vidid):
     buttons = [
         [
             InlineKeyboardButton(
-                text=_["SG_B_2"],
+                text="ᴀᴜᴅɪᴏ",
                 callback_data=f"song_helper audio|{vidid}",
             ),
             InlineKeyboardButton(
-                text=_["SG_B_3"],
+                text="ᴠɪᴅᴇᴏ",
                 callback_data=f"song_helper video|{vidid}",
             ),
         ],

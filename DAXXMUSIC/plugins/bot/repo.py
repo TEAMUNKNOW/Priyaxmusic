@@ -1,105 +1,120 @@
-from pyrogram import filters
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+import requests
+from requests import get
 from DAXXMUSIC import app
-from config import BOT_USERNAME
-from DAXXMUSIC.utils.errors import capture_err
-import httpx 
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from pyrogram import filters, enums 
+from pyrogram.types import InputMediaPhoto
+from config import BANNED_USERS
+from aiohttp import ClientSession as cs
+from json import loads
+from bs4 import BeautifulSoup as BSP
+from io import BytesIO
+import re
 
-start_txt = """**
-✪ ωεℓ¢σмє ƒσя 𝚍𝚊𝚡𝚡 яєρσѕ ✪
- 
- ➲ ᴀʟʟ ʀᴇᴘᴏ ᴇᴀsɪʟʏ ᴅᴇᴘʟᴏʏ ᴏɴ ʜᴇʀᴏᴋᴜ ᴡɪᴛʜᴏᴜᴛ ᴀɴʏ ᴇʀʀᴏʀ ✰
- 
- ➲ ɴᴏ ʜᴇʀᴏᴋᴜ ʙᴀɴ ɪssᴜᴇ ✰
- 
- ➲ ɴᴏ ɪᴅ ʙᴀɴ ɪssᴜᴇ ✰
- 
- ➲ᴜɴʟɪᴍɪᴛᴇᴅ ᴅʏɴᴏs ✰
- 
- ➲ ʀᴜɴ 24x7 ʟᴀɢ ғʀᴇᴇ ᴡɪᴛʜᴏᴜᴛ sᴛᴏᴘ ✰
- 
- ► ɪғ ʏᴏᴜ ғᴀᴄᴇ ᴀɴʏ ᴘʀᴏʙʟᴇᴍ ᴛʜᴇɴ sᴇɴᴅ ss
-**"""
+@app.on_message(filters.command(["pic"], prefixes=["/", "!", "."]) & ~BANNED_USERS)
+async def pinterest(_, message):
+    chat_id = message.chat.id
 
+    try:
+        query = message.text.split(None, 1)[1]
+    except:
+        return await message.reply("ɢɪᴠᴇ ɪᴍᴀɢᴇ ɴᴀᴍᴇ ғᴏʀ sᴇᴀʀᴄʜ 🔍")
 
+    try:
+        images = get(f"https://pinterest-api-one.vercel.app/?q={query}").json()
 
+        if not images or "images" not in images:
+            raise Exception("No images found.")
 
-@app.on_message(filters.command("repo"))
-async def start(_, msg):
-    buttons = [
-        [ 
-          InlineKeyboardButton("𝗔𝗗𝗗 𝗠𝗘", url=f"https://t.me/{BOT_USERNAME}?startgroup=true")
-        ],
-        [
-          InlineKeyboardButton("𝗛𝗘𝗟𝗣", url="https://t.me/HEROKUFREECC"),
-          InlineKeyboardButton("𝗢𝗪𝗡𝗘𝗥", url="https://t.me/iam_daxx"),
-          ],
-               [
-                InlineKeyboardButton("𝗟𝗜𝗩𝗘 𝗖𝗖", url="https://t.me/ALLTYPECC"),
+        media_group = []
+        count = 0
 
-],
-[
-              InlineKeyboardButton("𝗕𝗔𝗡 𝗔𝗟𝗟︎", url=f"https://github.com/DAXXTEAM/DAXXBANALL"),
-              InlineKeyboardButton("︎𝗠𝗨𝗦𝗜𝗖", url=f"https://github.com/DAXXTEAM/DAXXMUSIC"),
-              ],
-              [
-              InlineKeyboardButton("𝗠𝗔𝗡𝗔𝗚𝗘𝗠𝗘𝗡𝗧︎", url=f"https://github.com/DAXXTEAM/YumikooRobot"),
-InlineKeyboardButton("𝗖𝗛𝗔𝗧 𝗕𝗢𝗧", url=f"https://github.com/DAXXTEAM/DAXXCHATBOT"),
-],
-[
-InlineKeyboardButton("𝗦𝗧𝗥𝗜𝗡𝗚𝗕𝗢𝗧", url=f"https://github.com/DAXXTEAM/DAXXSTRINGBOT"),
-InlineKeyboardButton("𝗖𝗛𝗔𝗧𝗚𝗣𝗧", url=f"https://github.com/DAXXTEAM/DAXXCHATGPT"),
-],
-[
-              InlineKeyboardButton("𝗩𝗣𝗦", url=f"https://github.com/DAXXTEAM/Kaali-Linux"),
-              InlineKeyboardButton("𝗠𝗢𝗩𝗜𝗘︎", url=f"https://github.com/DAXXTEAM/DAXXMOVIEBOT"),
-              ],
-              [
-              InlineKeyboardButton("𝗦𝗧𝗥𝗜𝗡𝗚 𝗛𝗔𝗖𝗞︎", url=f"https://github.com/DAXXTEAM/DAXXSTRINGHACK"),
-InlineKeyboardButton("𝗜𝗗 𝗖𝗛𝗔𝗧 𝗕𝗢𝗧", url=f"https://github.com/DAXXTEAM/DAXXIDCHAT"),
-],
-[
-InlineKeyboardButton("𝗨𝗦𝗘𝗥𝗕𝗢𝗧", url=f"https://github.com/DAXXTEAM/DAXXUSERBOT"),
-InlineKeyboardButton("𝗦𝗘𝗔𝗥𝗖𝗛𝗕𝗢𝗧", url=f"https://github.com/DAXXTEAM/SEARCH_BOT"),
-],
-[
-InlineKeyboardButton("𝗖𝗖 𝗕𝗢𝗧", url=f"https://github.com/DAXXTEAM/CC_BOT"),
+        msg = await message.reply(f"sᴄʀᴀᴘɪɴɢ ɪᴍᴀɢᴇs ғʀᴏᴍ ᴘɪɴᴛᴇʀᴇᴛs...")
 
-        ]]
-    
-    reply_markup = InlineKeyboardMarkup(buttons)
-    
-    await msg.reply_photo(
-        photo="https://telegra.ph/file/faa1f3ad7116e33d9f402.jpg",
-        caption=start_txt,
-        reply_markup=reply_markup
-    )
- 
-   
-# --------------
-
-
-@app.on_message(filters.command("repo", prefixes="#"))
-@capture_err
-async def repo(_, message):
-    async with httpx.AsyncClient() as client:
-        response = await client.get("https://api.github.com/repos/DAXXTEAM/DAXXMUSIC/contributors")
-    
-    if response.status_code == 200:
-        users = response.json()
-        list_of_users = ""
-        count = 1
-        for user in users:
-            list_of_users += f"{count}. [{user['login']}]({user['html_url']})\n"
+        for url in images["images"][:6]:
+            media_group.append(InputMediaPhoto(media=url))
             count += 1
+            await msg.edit(f"=> ᴏᴡᴏ sᴄʀᴀᴘᴇᴅ ɪᴍᴀɢᴇs {count}")
 
-        text = f"""[𝖱𝖤𝖯𝖮 𝖫𝖨𝖭𝖪](https://github.com/DAXXTEAM/DAXXMUSIC) | [𝖦𝖱𝖮𝖴𝖯](https://t.me/HEROKUFREECC)
-| 𝖢𝖮𝖭𝖳𝖱𝖨𝖡𝖴𝖳𝖮𝖱𝖲 |
-----------------
-{list_of_users}"""
-        await app.send_message(message.chat.id, text=text, disable_web_page_preview=True)
-    else:
-        await app.send_message(message.chat.id, text="Failed to fetch contributors.")
+        if media_group:
+            await app.send_media_group(
+                chat_id=chat_id,
+                media=media_group,
+                reply_to_message_id=message.id
+            )
+            return await msg.delete()
+        else:
+            raise Exception("No images found.")
 
+    except Exception as e:
+        await msg.delete()
+        return await message.reply(f"ᴇʀʀᴏʀ : {e}")
 
+        
+pin_pattern = "(?:https\:\/\/pin.it\/\S\S\S\S\S\S\S\S\S)"      
+async def scrap_pins(message):
+    text = re.findall(pin_pattern, message.text)
+    async with cs() as sess:
+        msg = await message.reply("`Downloading...`", parse_mode=enums.ParseMode.MARKDOWN)
+        resp = await sess.get(text[0])
+        soup = BSP(await resp.text(), 'html.parser')
+        try:
+            data = soup.find('script', attrs={'data-test-id': 'video-snippet'})
+            if data:
+                tag = loads(data.string.strip())
+                video = BytesIO(await (await sess.get(tag['contentUrl'])).read())
+                thumb = BytesIO(await (await sess.get(tag['thumbnailUrl'])).read())
+                video.name = tag['name'] if tag['name'] else "@YaaraOP"
+                await msg.delete()
+                await message.reply_video(video=video, caption=f"Uploaded By [{app.me.first_name}](https://t.me/{app.me.username})", thumb=thumb, supports_streaming=True, parse_mode=enums.ParseMode.MARKDOWN)
+            else:
+                data = soup.find('script', attrs={'data-test-id': 'leaf-snippet'})
+                tag = loads(data.string.strip())
+                photo = BytesIO(await (await sess.get(tag['image'])).read())
+                await msg.delete()
+                await message.reply_photo(photo=photo, caption=f"Uploaded By [{app.me.first_name}](https://t.me/{app.me.username})", parse_mode=enums.ParseMode.MARKDOWN)
+        except KeyError:
+            print("Key Error")
+            
+@app.on_message(filters.regex(r'\b(?:pin\.it|pinterest\.com)\b') & (filters.group | filters.private) & ~BANNED_USERS)
+async def pin_download(_, message):
+    await scrap_pins(message)
+    
+snap_pattern = "(?:https\:\/\/t.snapchat.com\/\S\S\S\S\S\S\S\S)"            
+async def scrap_snaps(message):
+    text = re.findall(snap_pattern, message.text)
+    async with cs() as sess:
+        msg = await message.reply("`Downloading...`", parse_mode=enums.ParseMode.MARKDOWN)
+        resp = await sess.get(text[0])
+        soup = BSP(await resp.text(), 'html.parser')
+        tag = soup.findAll("script", attrs={'data-react-helmet':'true', 'type':'application/ld+json'})[0]
+        data = loads(tag.string.strip())
+        video = BytesIO(await (await sess.get(data['contentUrl'])).read())
+        thumb = BytesIO(await (await sess.get(data['thumbnailUrl'])).read())
+        video.name = data['name'] if data['name'] else "@YaaraOP"
+        await msg.delete()
+        await message.reply_video(video, caption=f"Uploaded By [{app.me.first_name}](https://t.me/{app.me.username})", thumb=thumb, parse_mode=enums.ParseMode.MARKDOWN)
+           
+@app.on_message(filters.regex("(?:https\:\/\/t.snapchat.com\/\S\S\S\S\S\S\S\S)") & (filters.group | filters.private) & ~BANNED_USERS)
+async def snap_download(_, message):
+    await scrap_snaps(message)
+
+async def download_ig(query):
+	url = "https://instagram-bulk-scraper-latest.p.rapidapi.com/media_download_from_url"
+	payload = { "url": query}
+	headers = {
+	"content-type": "application/json",
+	"X-RapidAPI-Key": "1852da1a0dmshb013cd0683d2903p12df7ajsnd5d070b1f894",
+	"X-RapidAPI-Host": "instagram-bulk-scraper-latest.p.rapidapi.com"
+	}
+	response = requests.post(url, json=payload, headers=headers)
+	return response.json()['data']
+
+@app.on_message(filters.regex(r'https://www\.instagram\.com/reel/.*') & (filters.group | filters.private))
+async def insta(client, message):
+            			chat_id = message.chat.id
+            			query = message.text
+            			data = await download_ig(query)
+            			if data:
+            				await message.reply_video(video=data['main_media_hd'], caption=f"Download by {app.me.mention}")
+            			else:
+            				await message.reply("Give A Valid Url")

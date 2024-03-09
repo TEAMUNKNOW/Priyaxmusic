@@ -5,7 +5,7 @@ from DAXXMUSIC import app
 from pyrogram import filters
 
 
-@app.on_message(filters.command("ask"))
+@app.on_message(filters.command("ask", "ai"))
 async def ai_bot(_, message):
      if message.reply_to_message:
       queri = message.reply_to_message.text
